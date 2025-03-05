@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event RSVP</title>
+</head>
+<body>
+    <h1>Create Event</h1>
+    <input type="text" id="eventName" placeholder="Event Name">
+    <button onclick="createNewEvent()">Create Event</button>
+
+    <h1>RSVP to Event</h1>
+    <input type="text" id="eventId" placeholder="Event ID">
+    <input type="text" id="userName" placeholder="Your Name">
+    <button onclick="rsvp()">RSVP</button>
+
+    <h2>Events List</h2>
+    <div id="eventsList"></div>
+
+    <script>
+        async function createNewEvent() {
+            const name = document.getElementById('eventName').value;
+            if (!name) {
+                alert("Event name cannot be empty!");
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/create-event', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to create event");
+                }
+
+                const data = await response.json();
+                alert('Event Created! ID: ' + data.eventId);
+
+                // After event creation, fetch and display the updated events list
+                fetchEvents();
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Error creating event!");
+            }
+        }
+
+        async function rsvp() {
+            const event_id = document.getElementById('eventId').value;
+            const name = document.getElementById('userName').value;
+
+            if (!event_id || !name) {
+                alert("Event ID and Name cannot be empty!");
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/rsvp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ event_id, name })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to RSVP");
+                }
+
+                const data = await response.json();
+                alert('RSVP Confirmed!');
+
+                // After RSVP, fetch and display the updated events list with RSVPs
+                fetchEvents();
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Error sending RSVP!");
+            }
+        }
+
+        async function fetchEvents() {
+            try {
+                const response = await fetch('http://localhost:3000/get-events');
+                const data = await response.json();
+
+                const eventsListDiv = document.getElementById('eventsList');
+                eventsListDiv.innerHTML = '';  // Clear the list before updating
+
+                data.events.forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.innerHTML = `<strong>${event.name}</strong> (ID: ${event.event_id})`;
+
+                    // Fetch RSVPs for the event
+                    fetchRsvps(event.event_id, eventDiv);
+
+                    eventsListDiv.appendChild(eventDiv);
+                });
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            }
+        }
+
+        async function fetchRsvps(eventId, eventDiv) {
+            try {
+                const response = await fetch(`http://localhost:3000/get-rsvps/${eventId}`);
+                const data = await response.json();
+
+                const rsvpsList = document.createElement('ul');
+                data.rsvps.forEach(rsvp => {
+                    const rsvpItem = document.createElement('li');
+                    rsvpItem.textContent = rsvp.name;
+                    rsvpsList.appendChild(rsvpItem);
+                });
+
+                eventDiv.appendChild(rsvpsList);
+            } catch (error) {
+                console.error('Error fetching RSVPs:', error);
+            }
+        }
+
+        // Initial fetch to load events when the page loads
+        window.onload = fetchEvents;
+    </script>
+</body>
+</html>

@@ -38,11 +38,9 @@
                 }
 
                 const data = await response.json();
-                alert('Event Created! ID: ' + data.eventId);
+                alert('Event Created! ID: ' + data.event_id); // Changed to match backend response
 
-                // After event creation, fetch and display the updated events list
-                fetchEvents();
-
+                fetchEvents(); // Refresh event list
             } catch (error) {
                 console.error('Error:', error);
                 alert("Error creating event!");
@@ -69,12 +67,8 @@
                     throw new Error("Failed to RSVP");
                 }
 
-                const data = await response.json();
                 alert('RSVP Confirmed!');
-
-                // After RSVP, fetch and display the updated events list with RSVPs
-                fetchEvents();
-
+                fetchEvents(); // Refresh event list
             } catch (error) {
                 console.error('Error:', error);
                 alert("Error sending RSVP!");
@@ -87,14 +81,13 @@
                 const data = await response.json();
 
                 const eventsListDiv = document.getElementById('eventsList');
-                eventsListDiv.innerHTML = '';  // Clear the list before updating
+                eventsListDiv.innerHTML = ''; // Clear the list before updating
 
                 data.events.forEach(event => {
                     const eventDiv = document.createElement('div');
                     eventDiv.innerHTML = `<strong>${event.name}</strong> (ID: ${event.event_id})`;
 
-                    // Fetch RSVPs for the event
-                    fetchRsvps(event.event_id, eventDiv);
+                    fetchRsvps(event.event_id, eventDiv); // Fetch RSVPs for each event
 
                     eventsListDiv.appendChild(eventDiv);
                 });
@@ -121,7 +114,7 @@
             }
         }
 
-        // Initial fetch to load events when the page loads
+        // Load events when the page loads
         window.onload = fetchEvents;
     </script>
 </body>

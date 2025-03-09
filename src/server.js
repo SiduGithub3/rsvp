@@ -26,10 +26,10 @@ db.connect(err => {
     }
 });
 
-// Serve static files (HTML, CSS, JS)
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve the homepage
+// Serve homepage
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -44,7 +44,7 @@ app.post('/create-event', (req, res) => {
             console.error('Error inserting event:', err.message);
             return res.status(500).json({ error: 'Database error' });
         }
-        res.status(201).json({ message: 'Event created', eventId: result.insertId });
+        res.status(201).json({ message: 'Event created', event_id: result.insertId }); // Ensure correct response format
     });
 });
 

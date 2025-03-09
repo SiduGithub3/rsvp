@@ -38,9 +38,8 @@
                 }
 
                 const data = await response.json();
-                alert('Event Created! ID: ' + data.event_id); // Changed to match backend response
-
-                fetchEvents(); // Refresh event list
+                alert('Event Created! ID: ' + data.event_id);
+                fetchEvents();
             } catch (error) {
                 console.error('Error:', error);
                 alert("Error creating event!");
@@ -68,7 +67,7 @@
                 }
 
                 alert('RSVP Confirmed!');
-                fetchEvents(); // Refresh event list
+                fetchEvents();
             } catch (error) {
                 console.error('Error:', error);
                 alert("Error sending RSVP!");
@@ -81,14 +80,12 @@
                 const data = await response.json();
 
                 const eventsListDiv = document.getElementById('eventsList');
-                eventsListDiv.innerHTML = ''; // Clear the list before updating
+                eventsListDiv.innerHTML = '';
 
                 data.events.forEach(event => {
                     const eventDiv = document.createElement('div');
-                    eventDiv.innerHTML = `<strong>${event.name}</strong> (ID: ${event.event_id})`;
-
-                    fetchRsvps(event.event_id, eventDiv); // Fetch RSVPs for each event
-
+                    eventDiv.innerHTML = `<strong>${event.name}</strong> (ID: ${event.id})`;
+                    fetchRsvps(event.id, eventDiv);
                     eventsListDiv.appendChild(eventDiv);
                 });
             } catch (error) {
@@ -114,7 +111,6 @@
             }
         }
 
-        // Load events when the page loads
         window.onload = fetchEvents;
     </script>
 </body>

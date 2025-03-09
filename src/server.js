@@ -44,7 +44,7 @@ app.post('/create-event', (req, res) => {
             console.error('Error inserting event:', err.message);
             return res.status(500).json({ error: 'Database error' });
         }
-        res.status(201).json({ message: 'Event created', event_id: result.insertId }); // Ensure correct response format
+        res.status(201).json({ message: 'Event created', event_id: result.insertId });
     });
 });
 
@@ -83,6 +83,28 @@ app.get('/get-rsvps/:eventId', (req, res) => {
         }
         res.json({ rsvps: results });
     });
+});
+
+// Ensure events table exists
+db.query(`
+    CREATE TABLE IF NOT EXISTS events (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL
+    )
+`, (err) => {
+    if (err) console.error('Error creating events table:', err);
+});
+
+// Ensure RSVPs table exists
+db.query(`
+    CREATE TABLE IF NOT EXISTS rsvps (
+        rsvp_id INT AUTO_INCREMENT PRIMARY KEY,
+        event_id INT NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
+    )
+`, (err) => {
+    if (err) console.error('Error creating RSVPs table:', err);
 });
 
 // Start server

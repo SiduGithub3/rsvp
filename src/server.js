@@ -108,12 +108,12 @@ db.query(`
 });
 
 db.query(
-    `DELETE FROM rsvps`, (err) => {
+    `DELETE FROM rsvps;`, (err) => {
         if (err) console.error('Error creating RSVPs table:', err);
     }
 );
 db.query(
-    `DELETE FROM events`, (err) => {
+    `DELETE FROM events;`, (err) => {
         if (err) console.error('Error creating RSVPs table:', err);
     }
 );

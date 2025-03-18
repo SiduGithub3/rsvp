@@ -106,7 +106,7 @@ db.query(`
 `, (err) => {
     if (err) console.error('Error creating RSVPs table:', err);
 });
-
+/*
 db.query(
     `DELETE FROM rsvps;`, (err) => {
         if (err) console.error('Error creating RSVPs table:', err);
@@ -117,7 +117,7 @@ db.query(
         if (err) console.error('Error creating RSVPs table:', err);
     }
 );
-
+*/
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -1,85 +1,161 @@
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    color: white;
-    text-align: center;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #f8fafc;
     margin: 0;
-    padding: 0;
+    padding: 20px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
 }
 
-/* Container */
+/* Main Container */
 .container {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    width: 80%;
-    max-width: 500px;
-    backdrop-filter: blur(10px);
-    animation: fadeIn 0.8s ease-in-out;
+    background: rgba(30, 41, 59, 0.7);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    width: 90%;
+    max-width: 480px;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Titles */
+/* Section styles */
+.section {
+    margin-bottom: 28px;
+}
+
+/* Headings */
 h1, h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #f8f8f8;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 18px;
+    font-size: 1.5rem;
+    color: #f8fafc;
 }
 
-/* Inputs */
+h1 {
+    margin-top: 0;
+}
+
+h2 {
+    margin-top: 32px;
+    font-size: 1.25rem;
+}
+
+/* Form elements */
 input {
-    width: 80%;
-    padding: 10px;
-    margin: 10px 0;
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 12px;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     font-size: 16px;
-    text-align: center;
+    background: rgba(255, 255, 255, 0.08);
+    color: #f8fafc;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+input::placeholder {
+    color: rgba(248, 250, 252, 0.5);
+}
+
+input:focus {
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 2px rgba(59, 130, 246, 0.5);
 }
 
 /* Buttons */
 button {
-    background: #ff7f50;
+    width: 100%;
+    background: #3b82f6;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
-    border-radius: 6px;
-    font-size: 18px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s, background 0.3s;
+    transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 button:hover {
-    transform: scale(1.05);
-    background: #ff6347;
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
 }
 
-/* Event List */
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+/* Events List */
 #eventsList {
-    text-align: left;
-    margin-top: 20px;
+    margin-top: 16px;
+    width: 100%;
 }
 
 .event {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 10px;
-    border-radius: 8px;
-    margin: 10px 0;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
-    animation: slideUp 0.6s ease-in-out;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(10px);
+    animation-delay: calc(0.05s * var(--index, 0));
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.event-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.event-id {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+/* RSVPs list */
+.rsvps {
+    margin-top: 10px;
+    padding-left: 0;
+}
+
+.rsvps li {
+    background: rgba(255, 255, 255, 0.08);
+    margin: 6px 0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    list-style-type: none;
+    animation: fadeIn 0.3s ease forwards;
+    opacity: 0;
+    animation-delay: calc(0.05s * var(--index, 0));
 }
 
 /* Animations */
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(-8px);
     }
     to {
         opacity: 1;
@@ -90,10 +166,147 @@ button:hover {
 @keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(16px);
     }
     to {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Success notification */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 24px;
+    background: rgba(16, 185, 129, 0.9);
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateX(120%);
+    animation: slideIn 0.5s forwards, slideOut 0.5s 3s forwards;
+    backdrop-filter: blur(8px);
+    z-index: 100;
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    to {
+        transform: translateX(120%);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .container {
+        width: 100%;
+        padding: 24px;
+    }
+
+}
+/* Additional animations to add to the styles.css file */
+
+/* Button ripple effect */
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+/* Loading state for buttons */
+button.loading {
+    position: relative;
+    cursor: default;
+    pointer-events: none;
+}
+
+button.loading::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: calc(50% - 10px);
+    right: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Form field focus animation */
+input:focus {
+    animation: pulse-border 1.5s infinite;
+}
+
+@keyframes pulse-border {
+    0% {
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 2px rgba(59, 130, 246, 0.5);
+    }
+    50% {
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 4px rgba(59, 130, 246, 0.3);
+    }
+    100% {
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 2px rgba(59, 130, 246, 0.5);
+    }
+}
+
+/* Empty state animation */
+.no-events {
+    text-align: center;
+    padding: 32px 16px;
+    opacity: 0.7;
+    font-size: 0.95rem;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Event hover effect */
+.event {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* RSVP list animations */
+.rsvps li {
+    transition: all 0.2s ease;
+}
+
+.rsvps li:hover {
+    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.12);
 }

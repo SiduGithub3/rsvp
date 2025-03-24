@@ -6,16 +6,18 @@
     <title>Event RSVP</title>
     <style>
         /* Modern, Minimalist Styles */
+        /* Using CSS variables for easy theme management - smart move for future updates! */
         :root {
             --primary: #4a5568;
             --secondary: #718096;
-            --accent: #68d391;
+            --accent: #68d391;   /* Nice green accent color that pops against the neutral background */
             --background: #f7fafc;
             --text: #2d3748;
             --card: #ffffff;
             --danger: #fc8181;
         }
 
+        /* Smooth transitions make everything feel more polished */
         * {
             box-sizing: border-box;
             transition: all 0.3s ease;
@@ -28,11 +30,13 @@
             margin: 0;
             padding: 20px;
             min-height: 100vh;
+            /* Centering everything with flexbox - much cleaner than older methods */
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
+        /* Card container for each section - gives that nice separated layout feel */
         .container {
             background-color: var(--card);
             border-radius: 12px;
@@ -51,11 +55,13 @@
             text-align: center;
         }
 
+        /* Wrapping inputs in groups for consistent spacing */
         .input-group {
             position: relative;
             margin-bottom: 20px;
         }
 
+        /* Clean, modern form inputs */
         input {
             width: 100%;
             padding: 12px 15px;
@@ -67,11 +73,13 @@
             outline: none;
         }
 
+        /* Subtle focus state that draws attention without being distracting */
         input:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 2px rgba(104, 211, 145, 0.2);
         }
 
+        /* Attractive button styling with hover effects */
         button {
             background-color: var(--accent);
             color: #2d3748;
@@ -85,11 +93,13 @@
             width: 100%;
         }
 
+        /* Little lift effect on hover makes buttons feel more interactive */
         button:hover {
             background-color: #48bb78;
             transform: translateY(-2px);
         }
 
+        /* Delete button styling - red to indicate destructive action */
         .delete-btn {
             background-color: var(--danger);
             color: white;
@@ -104,6 +114,7 @@
             background-color: #e53e3e;
         }
 
+        /* Cards for each event in the list */
         .event-card {
             background-color: var(--card);
             border-radius: 8px;
@@ -113,6 +124,7 @@
             animation: slideUp 0.4s ease-out;
         }
 
+        /* Flex layout for event headers to put title and ID on opposite sides */
         .event-title {
             display: flex;
             justify-content: space-between;
@@ -121,11 +133,13 @@
             font-weight: 600;
         }
 
+        /* Subtle styling for event IDs */
         .event-id {
             font-size: 12px;
             color: var(--secondary);
         }
 
+        /* Clean list styling for RSVPs */
         .rsvp-list {
             list-style-type: none;
             padding: 0;
@@ -144,6 +158,7 @@
             border-bottom: none;
         }
 
+        /* Friendly empty state message when no events exist */
         .empty-state {
             text-align: center;
             color: var(--secondary);
@@ -151,7 +166,7 @@
             margin: 20px 0;
         }
 
-        /* Animations */
+        /* Animations to make the UI feel alive and responsive */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -184,6 +199,7 @@
             }
         }
         
+        /* Success and error message styling with pulse animation for feedback */
         .success-message {
             color: #48bb78;
             font-weight: 500;
@@ -200,6 +216,7 @@
     </style>
 </head>
 <body>
+    <!-- Event creation section -->
     <div class="container">
         <h1>Create Event</h1>
         <div class="input-group">
@@ -209,6 +226,7 @@
         <div id="createEventMessage"></div>
     </div>
 
+    <!-- RSVP section - where users can sign up for an event -->
     <div class="container">
         <h1>RSVP to Event</h1>
         <div class="input-group">
@@ -221,19 +239,25 @@
         <div id="rsvpMessage"></div>
     </div>
 
+    <!-- Events list section - displays all events and their RSVPs -->
     <div class="container">
         <h2>Events</h2>
         <div id="eventsList"></div>
     </div>
 
     <script>
-        // Set up event counter for animation delays
+        // Counter to create staggered animation effect for multiple events
         let eventCounter = 0;
 
+        /**
+         * Creates a new event by sending data to the server
+         * Gets the event name from the input field and validates it
+         */
         async function createNewEvent() {
             const name = document.getElementById('eventName').value;
             const messageDiv = document.getElementById('createEventMessage');
             
+            // Basic validation - can't create an event without a name!
             if (!name) {
                 messageDiv.className = 'error-message';
                 messageDiv.textContent = "Event name cannot be empty!";
@@ -241,6 +265,7 @@
             }
 
             try {
+                // Send the event data to our backend API
                 const response = await fetch('http://localhost:3000/create-event', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -251,13 +276,16 @@
                     throw new Error("Failed to create event");
                 }
 
+                // Show success message with the new event ID
                 const data = await response.json();
                 messageDiv.className = 'success-message';
                 messageDiv.textContent = 'Event Created! ID: ' + data.event_id;
                 document.getElementById('eventName').value = '';
+                
+                // Refresh the events list to show the new event
                 fetchEvents();
 
-                // Clear message after 3 seconds
+                // Clear success message after 3 seconds for a cleaner UI
                 setTimeout(() => {
                     messageDiv.textContent = '';
                 }, 3000);
@@ -268,11 +296,16 @@
             }
         }
 
+        /**
+         * Handles the RSVP form submission
+         * Validates inputs and sends the RSVP data to the server
+         */
         async function rsvp() {
             const event_id = document.getElementById('eventId').value;
             const name = document.getElementById('userName').value;
             const messageDiv = document.getElementById('rsvpMessage');
 
+            // Make sure both fields are filled out
             if (!event_id || !name) {
                 messageDiv.className = 'error-message';
                 messageDiv.textContent = "Event ID and Name cannot be empty!";
@@ -280,6 +313,7 @@
             }
 
             try {
+                // Send RSVP data to our backend
                 const response = await fetch('http://localhost:3000/rsvp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -290,12 +324,15 @@
                     throw new Error("Failed to RSVP");
                 }
 
+                // Show success message and clear the name field (keep the event ID for multiple RSVPs)
                 messageDiv.className = 'success-message';
                 messageDiv.textContent = 'RSVP Confirmed!';
                 document.getElementById('userName').value = '';
+                
+                // Refresh the events list to show the new RSVP
                 fetchEvents();
 
-                // Clear message after 3 seconds
+                // Clear success message after 3 seconds
                 setTimeout(() => {
                     messageDiv.textContent = '';
                 }, 3000);
@@ -306,28 +343,38 @@
             }
         }
 
+        /**
+         * Fetches all events from the server and displays them
+         * Creates event cards with staggered animation
+         */
         async function fetchEvents() {
             try {
+                // Get all events from the server
                 const response = await fetch('http://localhost:3000/get-events');
                 const data = await response.json();
 
                 const eventsListDiv = document.getElementById('eventsList');
                 eventsListDiv.innerHTML = '';
                 
-                // Reset counter
+                // Reset counter for the animation delay calculation
                 eventCounter = 0;
 
+                // Show a friendly message if there are no events yet
                 if (data.events.length === 0) {
                     eventsListDiv.innerHTML = '<div class="empty-state">No events yet. Create one!</div>';
                     return;
                 }
 
+                // Create a card for each event
                 data.events.forEach(event => {
                     const eventDiv = document.createElement('div');
                     eventDiv.className = 'event-card';
+                    
+                    // Stagger the animation of each card for a nice visual effect
                     eventDiv.style.animationDelay = `${eventCounter * 0.1}s`;
                     eventCounter++;
                     
+                    // Create the event header with name and ID
                     const titleDiv = document.createElement('div');
                     titleDiv.className = 'event-title';
                     
@@ -342,6 +389,7 @@
                     titleDiv.appendChild(idSpan);
                     eventDiv.appendChild(titleDiv);
                     
+                    // Fetch and display the RSVPs for this event
                     fetchRsvps(event.id, eventDiv);
                     eventsListDiv.appendChild(eventDiv);
                 });
@@ -352,11 +400,18 @@
             }
         }
 
+        /**
+         * Fetches RSVPs for a specific event and adds them to the event card
+         * @param {number} eventId - The ID of the event to fetch RSVPs for
+         * @param {HTMLElement} eventDiv - The event card element to add RSVPs to
+         */
         async function fetchRsvps(eventId, eventDiv) {
             try {
+                // Get RSVPs for this specific event
                 const response = await fetch(`http://localhost:3000/get-rsvps/${eventId}`);
                 const data = await response.json();
 
+                // Show a message if no one has RSVP'd yet
                 if (data.rsvps.length === 0) {
                     const emptyRsvp = document.createElement('div');
                     emptyRsvp.className = 'empty-state';
@@ -365,9 +420,11 @@
                     return;
                 }
 
+                // Create a list of RSVPs
                 const rsvpsList = document.createElement('ul');
                 rsvpsList.className = 'rsvp-list';
 
+                // Add each RSVP to the list
                 data.rsvps.forEach(rsvp => {
                     const rsvpItem = document.createElement('li');
                     rsvpItem.className = 'rsvp-item';
@@ -385,17 +442,18 @@
             }
         }
 
-        // Event listeners
+        // Set up button click event listeners
         document.getElementById('createEventBtn').addEventListener('click', createNewEvent);
         document.getElementById('rsvpBtn').addEventListener('click', rsvp);
         
-        // Add keypress event listeners for forms
+        // Add keyboard support for forms - pressing Enter in an input field submits the form
         document.getElementById('eventName').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 createNewEvent();
             }
         });
         
+        // For the RSVP form, only submit if both fields have values
         document.getElementById('userName').addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && document.getElementById('eventId').value) {
                 rsvp();
@@ -408,8 +466,8 @@
             }
         });
 
-        // Initialize
+        // Load events when the page first loads
         window.onload = fetchEvents;
     </script>
 </body>
-</html>
+</html>     

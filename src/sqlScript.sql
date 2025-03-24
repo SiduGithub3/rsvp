@@ -9,3 +9,4 @@ CREATE TABLE rsvps (
     name VARCHAR(255) NOT NULL,
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
 );
+
